@@ -39,10 +39,11 @@ typedef struct
 	float coordinate[3];
 	float color[4];
 	float texel[2];
-} Vertex;
+} Vert;
 
-Vertex vertex[3];
-GLubyte triangles[3];
+Vert initVertex[36];
+Vert vertex[36];
+GLubyte triangles[36];
 
 /* Variable to hold the VBO identifier and shader data */
 GLuint	index,		//Index to draw
@@ -77,40 +78,14 @@ void Game::initialize()
 
 	glewInit();
 
+	setupPoints();
+
 	DEBUG_MSG(glGetString(GL_VENDOR));
 	DEBUG_MSG(glGetString(GL_RENDERER));
 	DEBUG_MSG(glGetString(GL_VERSION));
 
-	/* Vertices counter-clockwise winding */
-	vertex[0].coordinate[0] = -0.5f;
-	vertex[0].coordinate[1] = -0.5f;
-	vertex[0].coordinate[2] = 0.0f;
-
-	vertex[1].coordinate[0] = -0.5f;
-	vertex[1].coordinate[1] = 0.5f;
-	vertex[1].coordinate[2] = 0.0f;
-
-	vertex[2].coordinate[0] = 0.5f;
-	vertex[2].coordinate[1] = 0.5f;
-	vertex[2].coordinate[2] = 0.0f;
-
-	vertex[0].color[0] = 1.0f;
-	vertex[0].color[1] = 0.0f;
-	vertex[0].color[2] = 0.0f;
-	vertex[0].color[3] = 1.0f;
-
-	vertex[1].color[0] = 1.0f;
-	vertex[1].color[1] = 0.0f;
-	vertex[1].color[2] = 0.0f;
-	vertex[1].color[3] = 1.0f;
-
-	vertex[2].color[0] = 1.0f;
-	vertex[2].color[1] = 0.0f;
-	vertex[2].color[2] = 0.0f;
-	vertex[2].color[3] = 0.0f;
-
-	vertex[0].texel[0] = 0.5f;
-	vertex[0].texel[1] = 0.5f;
+	vertex[0].texel[0] = 0.0f;
+	vertex[0].texel[1] = 0.0f;
 
 	vertex[1].texel[0] = 1.0f;
 	vertex[1].texel[1] = 1.0f;
@@ -118,8 +93,24 @@ void Game::initialize()
 	vertex[2].texel[0] = 1.0f;
 	vertex[2].texel[1] = 0.0f;
 
-	/*Index of Poly / Triangle to Draw */
-	triangles[0] = 0;   triangles[1] = 1;   triangles[2] = 2;
+	vertex[3].texel[0] = 0.0f;
+	vertex[3].texel[1] = 0.0f;
+
+	vertex[4].texel[0] = 1.0f;
+	vertex[4].texel[1] = 1.0f;
+
+	vertex[5].texel[0] = 0.0f;
+	vertex[5].texel[1] = 1.0f;
+
+	for (int i = 0; i < 36; i++)
+	{
+		triangles[i] = i;
+	}
+
+	for (int i = 0; i < 36; i++)
+	{
+		vertex[i] = initVertex[i];
+	}
 
 	/* Create a new VBO using VBO id */
 	glGenBuffers(1, vbo);
@@ -128,12 +119,12 @@ void Game::initialize()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 
 	/* Upload vertex data to GPU */
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 9, vertex, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vert) * 9, vertex, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glGenBuffers(1, &index);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 3, triangles, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 36, triangles, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	/* Vertex Shader which would normally be loaded from an external file */
@@ -258,42 +249,91 @@ void Game::initialize()
 
 void Game::update()
 {
-	elapsed = clock.getElapsedTime();
-
-	if (elapsed.asSeconds() >= 1.0f)
+	//Move the cube up 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		clock.restart();
-
-		if (!flip)
-		{
-			flip = true;
-		}
-		else
-			flip = false;
+		m_displacmentVector.y += 0.0005f;
 	}
 
-	if (flip)
+	//moves cube down
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
-		rotationAngle += 0.005f;
+		m_displacmentVector.y -= 0.0005f;
+	}
 
-		if (rotationAngle > 360.0f)
+	//Move the cube left
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		m_displacmentVector.x -= 0.0005f;
+	}
+
+	//moves cube right
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		m_displacmentVector.x += 0.0005f;
+	}
+
+	//Scale down.
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	{
+		m_scale -= 0.005f;
+}
+
+	//Scale up.
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	{
+		m_scale += 0.005f;
+	}
+
+	//Rotates X clockwise.
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+	{
+
+		m_rotationAngleX += 0.0005f;
+
+		if (m_rotationAngleX > 360.0f)
 		{
-			rotationAngle -= 360.0f;
+			m_rotationAngleX -= 360.0f;
 		}
 	}
 
-	//Change vertex data
-	vertex[0].coordinate[0] += -0.0001f;
-	vertex[0].coordinate[1] += -0.0001f;
-	vertex[0].coordinate[2] += -0.0001f;
+	//Rotates Y clockwise
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+	{
+		m_rotationAngleY += 0.0005f;
 
-	vertex[1].coordinate[0] += -0.0001f;
-	vertex[1].coordinate[1] += -0.0001f;
-	vertex[1].coordinate[2] += -0.0001f;
+		if (m_rotationAngleY > 360.0f)
+		{
+			m_rotationAngleY -= 360.0f;
+		}
+	}
 
-	vertex[2].coordinate[0] += -0.0001f;
-	vertex[2].coordinate[1] += -0.0001f;
-	vertex[2].coordinate[2] += -0.0001f;
+	//Rotates Z clockwise
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+	{
+		m_rotationAngleZ += 0.0005f;
+
+		if (m_rotationAngleZ > 360.0f)
+		{
+			m_rotationAngleZ -= 360.0f;
+		}
+	}
+
+	//updates all points' position
+	for (int i = 0; i < 36; i++)
+	{
+		MyVector3 tempVec{ initVertex[i].coordinate[0], initVertex[i].coordinate[1], initVertex[i].coordinate[2] };
+		tempVec = MyMatrix3::scale(m_scale) * tempVec;
+		tempVec += m_displacmentVector;
+		tempVec = MyMatrix3::rotationX(m_rotationAngleX) * tempVec;
+		tempVec = MyMatrix3::rotationY(m_rotationAngleY) * tempVec;
+		tempVec = MyMatrix3::rotationZ(m_rotationAngleZ) * tempVec;
+
+		vertex[i].coordinate[0] = tempVec.x;
+		vertex[i].coordinate[1] = tempVec.y;
+		vertex[i].coordinate[2] = tempVec.z;
+	}
+
 
 #if (DEBUG >= 2)
 	DEBUG_MSG("Update up...");
@@ -317,7 +357,7 @@ void Game::render()
 
 	/*	As the data positions will be updated by the this program on the
 		CPU bind the updated data to the GPU for drawing	*/
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 3, vertex, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vert) * 36, vertex, GL_STATIC_DRAW);
 
 	/*	Draw Triangle from VBO	(set where to start from as VBO can contain
 		model components that 'are' and 'are not' to be drawn )	*/
@@ -328,16 +368,16 @@ void Game::render()
 
 	// Set pointers for each parameter
 	// https://www.opengl.org/sdk/docs/man4/html/glVertexAttribPointer.xhtml
-	glVertexAttribPointer(positionID, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	glVertexAttribPointer(colorID, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	glVertexAttribPointer(texelID, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+	glVertexAttribPointer(positionID, 3, GL_FLOAT, GL_FALSE, sizeof(Vert), 0);
+	glVertexAttribPointer(colorID, 4, GL_FLOAT, GL_FALSE, sizeof(Vert), 0);
+	glVertexAttribPointer(texelID, 2, GL_FLOAT, GL_FALSE, sizeof(Vert), 0);
 
 	//Enable Arrays
 	glEnableVertexAttribArray(positionID);
 	glEnableVertexAttribArray(colorID);
 	glEnableVertexAttribArray(texelID);
 
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, (char*)NULL + 0);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, (char*)NULL + 0);
 
 	window.display();
 
@@ -351,5 +391,154 @@ void Game::unload()
 	glDeleteProgram(progID);
 	glDeleteBuffers(1, vbo);
 	stbi_image_free(img_data); //Free image
+}
+
+void Game::setupPoints()
+{
+	//Declare all starting positions of the initVertexes.
+	initVertex[0].coordinate[0] = -0.5f;
+	initVertex[0].coordinate[1] = -0.5f;
+	initVertex[0].coordinate[2] = -0.5f;
+
+	initVertex[1].coordinate[0] = -0.5f;
+	initVertex[1].coordinate[1] = -0.5f;
+	initVertex[1].coordinate[2] = 0.5f;
+
+	initVertex[2].coordinate[0] = -0.5f;
+	initVertex[2].coordinate[1] = 0.5f;
+	initVertex[2].coordinate[2] = -0.5f;
+
+	initVertex[3].coordinate[0] = 0.5f;
+	initVertex[3].coordinate[1] = 0.5f;
+	initVertex[3].coordinate[2] = -0.5f;
+
+	initVertex[4].coordinate[0] = -0.5f;
+	initVertex[4].coordinate[1] = -0.5f;
+	initVertex[4].coordinate[2] = -0.5f;
+
+	initVertex[5].coordinate[0] = -0.5f;
+	initVertex[5].coordinate[1] = 0.5f;
+	initVertex[5].coordinate[2] = -0.5f;
+
+	initVertex[6].coordinate[0] = 0.5f;
+	initVertex[6].coordinate[1] = -0.5f;
+	initVertex[6].coordinate[2] = 0.5f;
+
+	initVertex[7].coordinate[0] = -0.5f;
+	initVertex[7].coordinate[1] = -0.5f;
+	initVertex[7].coordinate[2] = -0.5f;
+
+	initVertex[8].coordinate[0] = 0.5f;
+	initVertex[8].coordinate[1] = -0.5f;
+	initVertex[8].coordinate[2] = -0.5f;
+
+	initVertex[9].coordinate[0] = 0.5f;
+	initVertex[9].coordinate[1] = 0.5f;
+	initVertex[9].coordinate[2] = -0.5f;
+
+	initVertex[10].coordinate[0] = 0.5f;
+	initVertex[10].coordinate[1] = -0.5f;
+	initVertex[10].coordinate[2] = -0.5f;
+
+	initVertex[11].coordinate[0] = -0.5f;
+	initVertex[11].coordinate[1] = -0.5f;
+	initVertex[11].coordinate[2] = -0.5f;
+
+	initVertex[12].coordinate[0] = -0.5f;
+	initVertex[12].coordinate[1] = -0.5f;
+	initVertex[12].coordinate[2] = 0.5f;
+
+	initVertex[13].coordinate[0] = -0.5f;
+	initVertex[13].coordinate[1] = 0.5f;
+	initVertex[13].coordinate[2] = 0.5f;
+
+	initVertex[14].coordinate[0] = -0.5f;
+	initVertex[14].coordinate[1] = 0.5f;
+	initVertex[14].coordinate[2] = -0.5f;
+
+	initVertex[15].coordinate[0] = 0.5f;
+	initVertex[15].coordinate[1] = -0.5f;
+	initVertex[15].coordinate[2] = 0.5f;
+
+	initVertex[16].coordinate[0] = -0.5f;
+	initVertex[16].coordinate[1] = -0.5f;
+	initVertex[16].coordinate[2] = 0.5f;
+
+	initVertex[17].coordinate[0] = -0.5f;
+	initVertex[17].coordinate[1] = -0.5f;
+	initVertex[17].coordinate[2] = -0.5f;
+
+	initVertex[18].coordinate[0] = -0.5f;
+	initVertex[18].coordinate[1] = 0.5f;
+	initVertex[18].coordinate[2] = 0.5f;
+
+	initVertex[19].coordinate[0] = -0.5f;
+	initVertex[19].coordinate[1] = -0.5f;
+	initVertex[19].coordinate[2] = 0.5f;
+
+	initVertex[20].coordinate[0] = 0.5f;
+	initVertex[20].coordinate[1] = -0.5f;
+	initVertex[20].coordinate[2] = 0.5f;
+
+	initVertex[21].coordinate[0] = 0.5f;
+	initVertex[21].coordinate[1] = 0.5f;
+	initVertex[21].coordinate[2] = 0.5f;
+
+	initVertex[22].coordinate[0] = 0.5f;
+	initVertex[22].coordinate[1] = -0.5f;
+	initVertex[22].coordinate[2] = -0.5f;
+
+	initVertex[23].coordinate[0] = 0.5f;
+	initVertex[23].coordinate[1] = 0.5f;
+	initVertex[23].coordinate[2] = -0.5f;
+
+	initVertex[24].coordinate[0] = 0.5f;
+	initVertex[24].coordinate[1] = -0.5f;
+	initVertex[24].coordinate[2] = -0.5f;
+
+	initVertex[25].coordinate[0] = 0.5f;
+	initVertex[25].coordinate[1] = 0.5f;
+	initVertex[25].coordinate[2] = 0.5f;
+
+	initVertex[26].coordinate[0] = 0.5f;
+	initVertex[26].coordinate[1] = -0.5f;
+	initVertex[26].coordinate[2] = 0.5f;
+
+	initVertex[27].coordinate[0] = 0.5f;
+	initVertex[27].coordinate[1] = 0.5f;
+	initVertex[27].coordinate[2] = 0.5f;
+
+	initVertex[28].coordinate[0] = 0.5f;
+	initVertex[28].coordinate[1] = 0.5f;
+	initVertex[28].coordinate[2] = -0.5f;
+
+	initVertex[29].coordinate[0] = -0.5f;
+	initVertex[29].coordinate[1] = 0.5f;
+	initVertex[29].coordinate[2] = -0.5f;
+
+	initVertex[30].coordinate[0] = 0.5f;
+	initVertex[30].coordinate[1] = 0.5f;
+	initVertex[30].coordinate[2] = 0.5f;
+
+	initVertex[31].coordinate[0] = -0.5f;
+	initVertex[31].coordinate[1] = 0.5f;
+	initVertex[31].coordinate[2] = -0.5f;
+
+	initVertex[32].coordinate[0] = -0.5f;
+	initVertex[32].coordinate[1] = 0.5f;
+	initVertex[32].coordinate[2] = 0.5f;
+
+	initVertex[33].coordinate[0] = 0.5f;
+	initVertex[33].coordinate[1] = 0.5f;
+	initVertex[33].coordinate[2] = 0.5f;
+
+	initVertex[34].coordinate[0] = -0.5f;
+	initVertex[34].coordinate[1] = 0.5f;
+	initVertex[34].coordinate[2] = 0.5f;
+
+	initVertex[35].coordinate[0] = 0.5f;
+	initVertex[35].coordinate[1] = -0.5f;
+	initVertex[35].coordinate[2] = 0.5f;
+
 }
 
