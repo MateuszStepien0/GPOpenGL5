@@ -59,9 +59,7 @@ GLuint	index,		//Index to draw
 		texelID;	// Texel ID
 
 //const string filename = "texture.tga";
-//const string filename = "cube.tga";
-
-const string filename = "texture.tga";
+const string filename = "cube.tga";
 
 int width; //width of texture
 int height; //height of texture
@@ -84,24 +82,6 @@ void Game::initialize()
 	DEBUG_MSG(glGetString(GL_RENDERER));
 	DEBUG_MSG(glGetString(GL_VERSION));
 
-	vertex[0].texel[0] = 0.0f;
-	vertex[0].texel[1] = 0.0f;
-
-	vertex[1].texel[0] = 1.0f;
-	vertex[1].texel[1] = 1.0f;
-
-	vertex[2].texel[0] = 1.0f;
-	vertex[2].texel[1] = 0.0f;
-
-	vertex[3].texel[0] = 0.0f;
-	vertex[3].texel[1] = 0.0f;
-
-	vertex[4].texel[0] = 1.0f;
-	vertex[4].texel[1] = 1.0f;
-
-	vertex[5].texel[0] = 0.0f;
-	vertex[5].texel[1] = 1.0f;
-
 	for (int i = 0; i < 36; i++)
 	{
 		triangles[i] = i;
@@ -119,7 +99,7 @@ void Game::initialize()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 
 	/* Upload vertex data to GPU */
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vert) * 9, vertex, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vert) * 36, vertex, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glGenBuffers(1, &index);
@@ -217,6 +197,10 @@ void Game::initialize()
 	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &to);
 	glBindTexture(GL_TEXTURE_2D, to);
+	// Enable Depth Test
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_CULL_FACE);
 
 	//Wrap around
 	//https://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexParameter.xml
@@ -369,8 +353,8 @@ void Game::render()
 	// Set pointers for each parameter
 	// https://www.opengl.org/sdk/docs/man4/html/glVertexAttribPointer.xhtml
 	glVertexAttribPointer(positionID, 3, GL_FLOAT, GL_FALSE, sizeof(Vert), 0);
-	glVertexAttribPointer(colorID, 4, GL_FLOAT, GL_FALSE, sizeof(Vert), 0);
-	glVertexAttribPointer(texelID, 2, GL_FLOAT, GL_FALSE, sizeof(Vert), 0);
+	glVertexAttribPointer(colorID, 4, GL_FLOAT, GL_FALSE, sizeof(Vert), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(texelID, 2, GL_FLOAT, GL_FALSE, sizeof(Vert), (void*)(7 * sizeof(float)));
 
 	//Enable Arrays
 	glEnableVertexAttribArray(positionID);
@@ -539,6 +523,114 @@ void Game::setupPoints()
 	initVertex[35].coordinate[0] = 0.5f;
 	initVertex[35].coordinate[1] = -0.5f;
 	initVertex[35].coordinate[2] = 0.5f;
+
+	initVertex[0].texel[0] = 0.75f;
+	initVertex[0].texel[1] = 0.33f;
+
+	initVertex[1].texel[0] = 1.0f;
+	initVertex[1].texel[1] = 0.33f;
+
+	initVertex[2].texel[0] = 1.0f;
+	initVertex[2].texel[1] = 0.66f;
+
+	initVertex[3].texel[0] = 0.75f;
+	initVertex[3].texel[1] = 0.66f;
+
+	initVertex[4].texel[0] = 0.5f;
+	initVertex[4].texel[1] = 0.33f;
+
+	initVertex[5].texel[0] = 0.5f;
+	initVertex[5].texel[1] = 0.66f;
+
+	initVertex[6].texel[0] = 0.25f;
+	initVertex[6].texel[1] = 0.0f;
+
+	initVertex[7].texel[0] = 0.0f;
+	initVertex[7].texel[1] = 0.33f;
+
+	initVertex[8].texel[0] = 0.25f;
+	initVertex[8].texel[1] = 0.33f;
+
+	initVertex[9].texel[0] = 0.50f;
+	initVertex[9].texel[1] = 0.66f;
+
+	initVertex[10].texel[0] = 0.50f;
+	initVertex[10].texel[1] = 0.33f;
+
+	initVertex[11].texel[0] = 0.75f;
+	initVertex[11].texel[1] = 0.33f;
+
+	initVertex[12].texel[0] = 0.75f;
+	initVertex[12].texel[1] = 0.33f;
+
+	initVertex[13].texel[0] = 1.0f;
+	initVertex[13].texel[1] = 0.66f;
+
+	initVertex[14].texel[0] = 0.75f;
+	initVertex[14].texel[1] = 0.66f;
+
+	initVertex[15].texel[0] = 0.25f;
+	initVertex[15].texel[1] = 0.33f;
+
+	initVertex[16].texel[0] = 0.0f;
+	initVertex[16].texel[1] = 0.33f;
+
+	initVertex[17].texel[0] = 0.0f;
+	initVertex[17].texel[1] = 0.0f;
+
+	initVertex[18].texel[0] = 0.0f;
+	initVertex[18].texel[1] = 0.66f;
+
+	initVertex[19].texel[0] = 0.0f;
+	initVertex[19].texel[1] = 0.33f;
+
+	initVertex[20].texel[0] = 0.25f;
+	initVertex[20].texel[1] = 0.33f;
+
+	initVertex[21].texel[0] = 0.25f;
+	initVertex[21].texel[1] = 0.66f;
+
+	initVertex[22].texel[0] = 0.50f;
+	initVertex[22].texel[1] = 0.33f;
+
+	initVertex[23].texel[0] = 0.50f;
+	initVertex[23].texel[1] = 0.66f;
+
+	initVertex[24].texel[0] = 0.50f;
+	initVertex[24].texel[1] = 0.33f;
+
+	initVertex[25].texel[0] = 0.25f;
+	initVertex[25].texel[1] = 0.33f;
+
+	initVertex[26].texel[0] = 0.25f;
+	initVertex[26].texel[1] = 0.33f;
+
+	initVertex[27].texel[0] = 0.0f;
+	initVertex[27].texel[1] = 0.66f;
+
+	initVertex[28].texel[0] = 0.0f;
+	initVertex[28].texel[1] = 1.0f;
+
+	initVertex[29].texel[0] = 0.25f;
+	initVertex[29].texel[1] = 1.0f;
+
+	initVertex[30].texel[0] = 0.25f;
+	initVertex[30].texel[1] = 0.66f;
+
+	initVertex[31].texel[0] = 0.0f;
+	initVertex[31].texel[1] = 1.0f;
+
+	initVertex[32].texel[0] = 0.0f;
+	initVertex[32].texel[1] = 0.66f;
+
+	initVertex[33].texel[0] = 0.25f;
+	initVertex[33].texel[1] = 0.66f;
+
+	initVertex[34].texel[0] = 0.0f;
+	initVertex[34].texel[1] = 0.66f;
+
+	initVertex[35].texel[0] = 0.25f;
+	initVertex[35].texel[1] = 0.33f;
 
 }
 
