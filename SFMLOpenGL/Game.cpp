@@ -197,6 +197,7 @@ void Game::initialize()
 	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &to);
 	glBindTexture(GL_TEXTURE_2D, to);
+
 	// Enable Depth Test
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -525,112 +526,112 @@ void Game::setupPoints()
 	initVertex[35].coordinate[2] = 0.5f;
 
 	initVertex[0].texel[0] = 0.75f;
-	initVertex[0].texel[1] = 0.33f;
+	initVertex[0].texel[1] = 0.25f;
 
 	initVertex[1].texel[0] = 1.0f;
-	initVertex[1].texel[1] = 0.33f;
+	initVertex[1].texel[1] = 0.25f;
 
 	initVertex[2].texel[0] = 1.0f;
-	initVertex[2].texel[1] = 0.66f;
+	initVertex[2].texel[1] = 0.50f;
 
 	initVertex[3].texel[0] = 0.75f;
-	initVertex[3].texel[1] = 0.66f;
+	initVertex[3].texel[1] = 0.50f;
 
 	initVertex[4].texel[0] = 0.5f;
-	initVertex[4].texel[1] = 0.33f;
+	initVertex[4].texel[1] = 0.25f;
 
 	initVertex[5].texel[0] = 0.5f;
-	initVertex[5].texel[1] = 0.66f;
+	initVertex[5].texel[1] = 0.50f;
 
 	initVertex[6].texel[0] = 0.25f;
 	initVertex[6].texel[1] = 0.0f;
 
 	initVertex[7].texel[0] = 0.0f;
-	initVertex[7].texel[1] = 0.33f;
+	initVertex[7].texel[1] = 0.25f;
 
 	initVertex[8].texel[0] = 0.25f;
-	initVertex[8].texel[1] = 0.33f;
+	initVertex[8].texel[1] = 0.25f;
 
 	initVertex[9].texel[0] = 0.50f;
-	initVertex[9].texel[1] = 0.66f;
+	initVertex[9].texel[1] = 0.50f;
 
 	initVertex[10].texel[0] = 0.50f;
-	initVertex[10].texel[1] = 0.33f;
+	initVertex[10].texel[1] = 0.25f;
 
 	initVertex[11].texel[0] = 0.75f;
-	initVertex[11].texel[1] = 0.33f;
+	initVertex[11].texel[1] = 0.25f;
 
 	initVertex[12].texel[0] = 0.75f;
-	initVertex[12].texel[1] = 0.33f;
+	initVertex[12].texel[1] = 0.25f;
 
 	initVertex[13].texel[0] = 1.0f;
-	initVertex[13].texel[1] = 0.66f;
+	initVertex[13].texel[1] = 0.50f;
 
 	initVertex[14].texel[0] = 0.75f;
-	initVertex[14].texel[1] = 0.66f;
+	initVertex[14].texel[1] = 0.50f;
 
 	initVertex[15].texel[0] = 0.25f;
-	initVertex[15].texel[1] = 0.33f;
+	initVertex[15].texel[1] = 0.25f;
 
 	initVertex[16].texel[0] = 0.0f;
-	initVertex[16].texel[1] = 0.33f;
+	initVertex[16].texel[1] = 0.25f;
 
 	initVertex[17].texel[0] = 0.0f;
 	initVertex[17].texel[1] = 0.0f;
 
 	initVertex[18].texel[0] = 0.0f;
-	initVertex[18].texel[1] = 0.66f;
+	initVertex[18].texel[1] = 0.50f;
 
 	initVertex[19].texel[0] = 0.0f;
-	initVertex[19].texel[1] = 0.33f;
+	initVertex[19].texel[1] = 0.25f;
 
 	initVertex[20].texel[0] = 0.25f;
-	initVertex[20].texel[1] = 0.33f;
+	initVertex[20].texel[1] = 0.25f;
 
 	initVertex[21].texel[0] = 0.25f;
-	initVertex[21].texel[1] = 0.66f;
+	initVertex[21].texel[1] = 0.50f;
 
 	initVertex[22].texel[0] = 0.50f;
-	initVertex[22].texel[1] = 0.33f;
+	initVertex[22].texel[1] = 0.25f;
 
 	initVertex[23].texel[0] = 0.50f;
-	initVertex[23].texel[1] = 0.66f;
+	initVertex[23].texel[1] = 0.50f;
 
 	initVertex[24].texel[0] = 0.50f;
-	initVertex[24].texel[1] = 0.33f;
+	initVertex[24].texel[1] = 0.25f;
 
 	initVertex[25].texel[0] = 0.25f;
-	initVertex[25].texel[1] = 0.33f;
+	initVertex[25].texel[1] = 0.25f;
 
 	initVertex[26].texel[0] = 0.25f;
-	initVertex[26].texel[1] = 0.33f;
+	initVertex[26].texel[1] = 0.50f;
 
 	initVertex[27].texel[0] = 0.0f;
-	initVertex[27].texel[1] = 0.66f;
+	initVertex[27].texel[1] = 0.50f;
 
 	initVertex[28].texel[0] = 0.0f;
-	initVertex[28].texel[1] = 1.0f;
+	initVertex[28].texel[1] = 0.75f;
 
 	initVertex[29].texel[0] = 0.25f;
-	initVertex[29].texel[1] = 1.0f;
+	initVertex[29].texel[1] = 0.75f;
 
 	initVertex[30].texel[0] = 0.25f;
-	initVertex[30].texel[1] = 0.66f;
+	initVertex[30].texel[1] = 0.50f;
 
 	initVertex[31].texel[0] = 0.0f;
-	initVertex[31].texel[1] = 1.0f;
+	initVertex[31].texel[1] = 0.75f;
 
 	initVertex[32].texel[0] = 0.0f;
-	initVertex[32].texel[1] = 0.66f;
+	initVertex[32].texel[1] = 0.50f;
 
 	initVertex[33].texel[0] = 0.25f;
-	initVertex[33].texel[1] = 0.66f;
+	initVertex[33].texel[1] = 0.50f;
 
 	initVertex[34].texel[0] = 0.0f;
-	initVertex[34].texel[1] = 0.66f;
+	initVertex[34].texel[1] = 0.50f;
 
 	initVertex[35].texel[0] = 0.25f;
-	initVertex[35].texel[1] = 0.33f;
+	initVertex[35].texel[1] = 0.25f;
 
 }
 
